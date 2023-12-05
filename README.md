@@ -1,37 +1,37 @@
 # Quantum Message Encryption
 
-Este repositorio contiene un programa de encriptación de mensajes que utiliza conceptos de la criptografía cuántica para generar una clave segura. El programa permite a los usuarios encriptar un mensaje y guardarlo en un archivo, y luego desencriptar el mensaje desde el archivo.
+This repository contains a message encryption program that uses concepts from quantum cryptography to generate a secure key. The program allows users to encrypt a message and save it to a file, and then decrypt the message from the file.
 
-## ¿Qué es la criptografía cuántica?
+## What is quantum cryptography?
 
-La criptografía cuántica es un enfoque de la criptografía que utiliza los principios de la mecánica cuántica. En particular, se basa en el hecho de que medir un sistema cuántico puede cambiar el estado de ese sistema. Esto significa que cualquier intento de interceptar la comunicación será detectado por los participantes legítimos.
+Quantum cryptography is an approach to cryptography that uses the principles of quantum mechanics. In particular, it is based on the fact that measuring a quantum system can change the state of that system. This means that any attempt to intercept the communication will be detected by legitimate participants.
 
-## ¿Cómo funciona este programa?
+## How does this program work?
 
-Este programa simula un protocolo de distribución de claves cuánticas. Primero, el usuario introduce un mensaje que desea encriptar. Luego, el programa genera una clave cuántica y la utiliza para encriptar el mensaje utilizando el algoritmo de encriptación AES. El mensaje encriptado y la clave se guardan en un archivo.
+This program simulates a quantum key distribution protocol. First, the user enters a message to be encrypted. Then, the program generates a quantum key and uses it to encrypt the message using the AES encryption algorithm. The encrypted message and the key are stored in a file.
 
-Cuando el usuario desea desencriptar el mensaje, el programa lee el mensaje encriptado y la clave del archivo, luego utiliza la clave para desencriptar el mensaje.
+When the user wants to decrypt the message, the program reads the encrypted message and the key from the file, then uses the key to decrypt the message.
 
-## Requisitos
+## Requirements
 
-Este programa requiere Python 3 y la biblioteca `pycryptodome`. Puedes instalar `pycryptodome` con el siguiente comando:
+This program requires Python 3 and the `pycryptodome` library. You can install `pycryptodome` with the following command:
 
 ```bash
 pip install pycryptodome
 ```
 
-## Uso
+## Use
 
-Para ejecutar el programa, navega hasta el directorio que contiene el archivo `message-encryption.py` y ejecuta el siguiente comando:
+To run the program, navigate to the directory containing the `message-encryption.py` file and execute the following command:
 
 ```bash
 python message-encryption.py
 ```
 
-El programa te pedirá que elijas entre encriptar un mensaje o desencriptar un mensaje. Si eliges encriptar un mensaje, el programa te pedirá que introduzcas el mensaje, luego lo encriptará y guardará el mensaje encriptado y la clave en un archivo llamado `encrypted_message.txt`.
+The program will ask you to choose between encrypting a message or decrypting a message. If you choose to encrypt a message, the program will ask you to enter the message, then encrypt it and save the encrypted message and the key in a file called `encrypted_message.txt`.
 
-Si eliges desencriptar un mensaje, el programa leerá el mensaje encriptado y la clave desde el archivo `encrypted_message.txt`, luego desencriptará el mensaje y lo imprimirá en la consola.
+If you choose to decrypt a message, the program will read the encrypted message and key from the `encrypted_message.txt` file, then decrypt the message and print it to the console.
 
-## Advertencia
+## Warning
 
-Este programa es solo un ejemplo y no debe utilizarse para encriptar información sensible en un entorno real. La criptografía cuántica es un campo de investigación activo y este programa no implementa un protocolo de criptografía cuántica seguro. Además, este programa guarda la clave de encriptación en el mismo archivo que el mensaje encriptado, lo cual no es seguro en un entorno real.# Message-Encryption
+This program is only an example and should not be used to encrypt sensitive information in a real environment. Quantum cryptography is an active field of research and this program does not implement a secure quantum cryptography protocol. In addition, this program stores the encryption key in the same file as the encrypted message, which is not secure in a real environment.# Message-Encryption
