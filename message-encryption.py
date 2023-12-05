@@ -7,38 +7,85 @@ from pathlib import Path
 from Crypto.Util.Padding import unpad
 
 def generate_key(length):
+    """
+    Generate a random key of the specified length.
+
+    Parameters:
+    length (int): The length of the key in bits.
+
+    Returns:
+    numpy.ndarray: The generated key as a numpy array of 0s and 1s.
+    """
     return np.random.randint(2, size=length)
 
 def measure_in_basis(state, basis):
+    """
+    Measure the state in the specified basis.
+
+    Parameters:
+    state (int): The state to be measured (0 or 1).
+    basis (int): The basis in which to measure the state (0 for Z basis, 1 for X basis).
+
+    Returns:
+    int: The measurement result.
+    """
     if basis == 0: # Z basis
         return state
     else: # X basis
         return 1 - state
 
 def encrypt_message(message, key):
-    # Crear un objeto AES
+    """
+    Encrypt the message using AES encryption.
+
+    Parameters:
+    message (str): The message to be encrypted.
+    key (bytes): The encryption key.
+
+    Returns:
+    tuple: A tuple containing the initialization vector (IV) and the ciphertext.
+    """
+    # Create an AES cipher object
     cipher = AES.new(key, AES.MODE_CBC)
     
-    # Encriptar el mensaje
+    # Encrypt the message
     ciphertext = cipher.encrypt(pad(message.encode(), AES.block_size))
     
     return cipher.iv, ciphertext
 
 def save_encrypted_message(iv, ciphertext, key, file_path):
+    """
+    Save the encrypted message, IV, and key to a file.
+
+    Parameters:
+    iv (bytes): The initialization vector (IV).
+    ciphertext (bytes): The encrypted message.
+    key (bytes): The encryption key.
+    file_path (str): The path to the file where the encrypted message will be saved.
+    """
     with open(file_path, "wb") as file:
         file.write(key)
         file.write(iv)
         file.write(ciphertext)
-    print(f"El mensaje se ha encriptado con éxito y se ha guardado en '{file_path}'.")
+    print(f"The message has been successfully encrypted and saved to '{file_path}'.")
 
 def print_animation(message):
+    """
+    Print a message with an animated effect.
+
+    Parameters:
+    message (str): The message to be printed.
+    """
     for char in message:
         print(char, end='', flush=True)
         time.sleep(0.1)
-    print()  # Nueva línea al final
+    print()  # New line at the end
 
 def main():
-    print("Bienvenido al encriptador cuántico de mensajes.")
+    """
+    Main function for the message encryption program.
+    """
+    print("Welcome to the quantum message encryptor.")
     print("""
 
  █████╗ ███╗   ███╗██████╗ 
@@ -51,78 +98,78 @@ def main():
 """)
     
     while True:
-        print("Seleccione una opción:")
-        print("1. Encriptar un mensaje")
-        print("2. Desencriptar un mensaje")
+        print("Select an option:")
+        print("1. Encrypt a message")
+        print("2. Decrypt a message")
         
-        choice = input("Ingrese el número de opción: ")
+        choice = input("Enter the option number: ")
         
         if choice == "1":
-            message = input("Ingrese el mensaje que desea encriptar: ")
+            message = input("Enter the message to encrypt: ")
             
-            # Longitud de la clave
+            # Key length
             key_length = len(message) * 8
             
-            # Alice genera una clave y una base
+            # Alice generates a key and a basis
             alice_key = generate_key(key_length)
             alice_bases = generate_key(key_length)
             
-            # Bob genera una base
+            # Bob generates a basis
             bob_bases = generate_key(key_length)
             
-            # Alice mide sus qubits en su base
+            # Alice measures her qubits in her basis
             alice_measurements = [measure_in_basis(alice_key[i], alice_bases[i]) for i in range(key_length)]
             
-            # Bob mide los qubits en su base
+            # Bob measures the qubits in his basis
             bob_measurements = [measure_in_basis(alice_key[i], bob_bases[i]) for i in range(key_length)]
             
-            # Ambos descartan las mediciones donde sus bases no coinciden
+            # Both discard the measurements where their bases do not match
             final_key = [alice_measurements[i] for i in range(key_length) if alice_bases[i] == bob_bases[i]]
             
-            # Asegurarse de que la longitud de la clave es válida para AES
+            # Make sure the key length is valid for AES
             if len(final_key) > 32:
                 final_key = final_key[:32]
             elif len(final_key) < 24:
                 final_key = final_key + [0] * (24 - len(final_key))
 
-            # Convertir la clave a bytes
+            # Convert the key to bytes
             key = bytes(final_key)
             
-            # Encriptar el mensaje
+            # Encrypt the message
             iv, ciphertext = encrypt_message(message, key)
             
-            # Ruta al directorio actual
+            # Current directory path
             current_directory = Path.cwd()
 
-            # Ruta al archivo en el directorio actual
+            # File path in the current directory
             file_path = current_directory / "encrypted_message.txt"
 
-            # Guardar el mensaje encriptado y la clave en un archivo
+            # Save the encrypted message and key to a file
             save_encrypted_message(iv, ciphertext, key, file_path)
             break
         elif choice == "2":
-            # Ruta al directorio actual
+            # Current directory path
             current_directory = Path.cwd()
 
-            # Ruta al archivo en el directorio actual
+            # File path in the current directory
             file_path = current_directory / "encrypted_message.txt"
 
-            # Leer el mensaje encriptado y la clave desde el archivo
+            # Read the encrypted message and key from the file
             with open(file_path, "rb") as file:
-                key = file.read(32)  # La clave tiene una longitud de 32 bytes
-                iv = file.read(16)  # El IV tiene una longitud de 16 bytes
-                ciphertext = file.read()  # El resto del archivo es el mensaje encriptado
+                key = file.read(32)  # The key has a length of 32 bytes
+                iv = file.read(16)  # The IV has a length of 16 bytes
+                ciphertext = file.read()  # The rest of the file is the encrypted message
 
-            # Crear un objeto de cifrado AES con la clave y el IV
+            # Create an AES cipher object with the key and IV
             cipher_dec = AES.new(key, AES.MODE_CBC, iv=iv)
 
-            # Desencriptar el mensaje y eliminar el relleno
+            # Decrypt the message and remove the padding
             plaintext = unpad(cipher_dec.decrypt(ciphertext), AES.block_size)
 
-            print("El mensaje desencriptado es:", plaintext.decode())
+            print("The decrypted message is:", plaintext.decode())
             break
     else:
-        print("Opción inválida. Por favor, seleccione una opción válida.")
+        print("Invalid option. Please select a valid option.")
 
 if __name__ == "__main__":
     main()
